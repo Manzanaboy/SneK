@@ -108,7 +108,6 @@ def snake():
             x-=1
             taille+=1
             gg[x][y]=[3,taille]
-            pomme()
         else:
             fen1.quit()
             print("perdu")
@@ -117,11 +116,10 @@ def snake():
         if gg[x+1][y][0]==0:
             x+=1
             gg[x][y]=[3,taille]
-        elif gg[x-1][y][0]==2:
+        elif gg[x+1][y][0]==2:
             x+=1
             taille+=1
             gg[x][y]=[3,taille]
-            pomme()
         else:
             fen1.quit()
             print("perdu")
@@ -134,7 +132,6 @@ def snake():
             y-=1
             taille+=1
             gg[x][y]=[3,taille]
-            pomme()
         else:
             fen1.quit()
             print("perdu")
@@ -147,7 +144,6 @@ def snake():
             y+=1
             taille+=1
             gg[x][y]=[3,taille]
-            pomme()
         else:
             fen1.quit()
             print("perdu")
