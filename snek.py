@@ -1,4 +1,6 @@
 # coding: utf-8
+#!/usr/bin/python
+import time
 from tkinter import *
 from random import randrange
 
@@ -21,6 +23,7 @@ gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10]
 x,y=1,1
 sens=2
 taille=3
+sec = 0
 
 
 ##grille 10: [[],[],[],[],[],[],[],[],[],[]]
@@ -105,8 +108,11 @@ def snake():
             x-=1
             taille+=1
             gg[x][y]=[3,taille]
+            pomme()
         else:
-            fen1.quit
+            fen1.quit()
+            print("perdu")
+            print("score : ",taille*10)
     if sens==4:
         if gg[x+1][y][0]==0:
             x+=1
@@ -115,8 +121,11 @@ def snake():
             x+=1
             taille+=1
             gg[x][y]=[3,taille]
+            pomme()
         else:
-            fen1.quit
+            fen1.quit()
+            print("perdu")
+            print("score : ",taille*10)
     if sens==1:
         if gg[1][y-1][0]==0:
             y-=1
@@ -125,8 +134,11 @@ def snake():
             y-=1
             taille+=1
             gg[x][y]=[3,taille]
+            pomme()
         else:
-            fen1.quit
+            fen1.quit()
+            print("perdu")
+            print("score : ",taille*10)
     if sens==2:
         if gg[x][y+1][0]==0:
             y+=1
@@ -135,9 +147,11 @@ def snake():
             y+=1
             taille+=1
             gg[x][y]=[3,taille]
+            pomme()
         else:
+            fen1.quit()
             print("perdu")
-    print(x,y)
+            print("score : ",taille*10)
 
 
 def move(e):
@@ -157,7 +171,14 @@ def move(e):
     elif e.keycode==39:
         sens=2
         "right"
-    print(sens)
+
+def tick():
+    global sec
+    sec += 1
+    # Take advantage of the after method of the Label
+    snake()
+    master()
+    can.after(500, tick)
 
 
 ##################################
@@ -177,5 +198,6 @@ bou4.pack()
 can.bind("<KeyPress>", move)
 can.focus_set()
 master()
+Button(fen1, fg='blue', text='Start', command=tick).pack()
 fen1.mainloop()
 fen1.destroy()
