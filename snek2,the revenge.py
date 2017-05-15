@@ -20,11 +20,11 @@ from random import randrange
 ##g9 =[[1],[0],[0],[0],[0],[0],[0],[0],[0],[1]]
 ##g10 =[[1],[1],[1],[1],[1],[1],[1],[1],[1],[1]]
 ##gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10]
-x,y=3,1
 sens=2
-taille=5
+taille=3
 sec = 0
-snake=[[1,1],[2,1],[3,1],[4,1],[5,1]]
+snake=[[1,1],[2,1],[3,1]]
+game="off"
 
 ##grille 10: [[],[],[],[],[],[],[],[],[],[]]
 ##grille 20: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
@@ -63,8 +63,6 @@ def master():
                 col="black"
             elif gg[r][un][0]==1:
                 col="white"
-            elif gg[r][un][0]==2:
-                col="blue"
             can.create_rectangle(un*25, y0, un*25+25, y0+25, fill=col)
 
 def pomme():
@@ -85,7 +83,12 @@ def pomme():
         pomme()
         
 def snk():
-    global gg,taille,sens,snake,x,y
+    global gg,taille,sens,snake,game
+    if gg[snake[taille-1][0]][snake[taille-1][1]][0]==1:
+        print("lost",taille*10-30)
+        tab.config(text="press <space> to continue")
+        game="off"
+        return
     if sens==1:
         snake.append([snake[taille-1][0],snake[taille-1][1]-1])
     elif sens==2:
@@ -99,42 +102,54 @@ def snk():
     if taille>4:
         for i in range(0,taille):
             if snake[taille][0]==snake[i][0] and snake[taille][1]==snake[i][1]:
-                print("lost")
-                fen1.quit()
-    if gg[snake[taille][0]][snake[taille][1]][0]==1:
-        print("lost")
-        fen1.quit()
+                print("lost",taille*10-30)
+                tab.config(text="press <space> to continue")
+                game="off"
+                return
     if gg[snake[taille][0]][snake[taille][1]][0]==2:
         gg[snake[taille][0]][snake[taille][1]][0]=0
         taille+=1
+        tab.config(text="score :"+str(taille*10-30))
         pomme()
+        print("mange")
     else:
         snake.pop(0)
     
 def move(e):
-    global x,y,sens
+    global x,y,sens,game,snake,g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20,gg,sec,taille
     if e.keycode==32:
-        snk()
-    if e.keycode==37 and gg[x][y-1][0]!=3:
+        if game=="off":
+            game="on"
+            snake=[[1,1],[2,1],[3,1]]
+            gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20]
+            sec=0
+            taille=3
+            master()
+            pomme()
+            print("move")
+            sens=2
+            tick()
+    if e.keycode==37 and snake[taille-1][1]!=snake[taille-2][1]+1:
         sens=1
         "left"
-    elif e.keycode==38  and gg[x-1][y][0]!=3:
+    elif e.keycode==38  and snake[taille-1][0]!=snake[taille-2][0]+1:
         sens=3
         "up"
-    elif e.keycode==40  and gg[x+1][y][0]!=3:
+    elif e.keycode==40  and snake[taille-1][0]!=snake[taille-2][0]-1:
         sens=4
         "down"
-    elif e.keycode==39  and gg[x][y+1][0]!=3:
+    elif e.keycode==39  and snake[taille-1][1]!=snake[taille-2][1]-1:
         sens=2
         "right"
     elif e.char=="z":
         master()
 
 def tick():
-    global sec
+    global sec,game
     sec += 1
     snk()
-    can.after(200, tick)
+    if game=="on":
+        can.after(200, tick)
 
 
 ##################################
@@ -145,12 +160,10 @@ can = Canvas(fen1,bg="black",height=500,width=500)
 can.pack(side=LEFT)
 bou1 = Button(fen1,text='Quitter',command=fen1.quit)
 bou1.pack(side=BOTTOM)
-bou2 = Button(fen1,text='draw',command=pomme)
-bou2.pack()
+tab=Label(fen1)
+tab.pack()
 can.bind("<KeyPress>", move)
 can.focus_set()
-pomme()
 master()
-Button(fen1, fg='blue', text='Start', command=tick).pack()
 fen1.mainloop()
 fen1.destroy()
