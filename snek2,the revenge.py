@@ -108,25 +108,25 @@ def snk():
                 return
     if gg[snake[taille][0]][snake[taille][1]][0]==2:
         gg[snake[taille][0]][snake[taille][1]][0]=0
+        pomme()
         taille+=1
         tab.config(text="score :"+str(taille*10-30))
-        pomme()
-        print("mange")
     else:
         snake.pop(0)
     
 def move(e):
-    global x,y,sens,game,snake,g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20,gg,sec,taille
+    global x,y,sens,game,snake,gg,sec,taille
     if e.keycode==32:
         if game=="off":
             game="on"
             snake=[[1,1],[2,1],[3,1]]
-            gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20]
+            for i in range(1,len(gg)-1):
+                for b in range(1,len(gg[i])-1):
+                    gg[i][b][0]=0
             sec=0
             taille=3
             master()
             pomme()
-            print("move")
             sens=2
             tick()
     if e.keycode==37 and snake[taille-1][1]!=snake[taille-2][1]+1:
