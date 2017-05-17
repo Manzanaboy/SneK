@@ -1,8 +1,10 @@
 # coding: utf-8
 #!/usr/bin/python
 import time
-from tkinter import *
+from Tkinter import *
+from tkMessageBox import *
 from random import randrange
+
 
 
 ##################################
@@ -25,6 +27,7 @@ taille=3
 sec = 0
 snake=[[1,1],[2,1],[3,1]]
 game="off"
+lan="off"
 
 ##grille 10: [[],[],[],[],[],[],[],[],[],[]]
 ##grille 20: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
@@ -53,7 +56,7 @@ gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20]
 
 ##################################
 ##          fonctions           ##
-##################################http://effbot.org/tkinterbook/tkinter-events-and-bindings.htm
+##################################
 def master():
     global gg
     for r in range(0,len(gg)):
@@ -116,7 +119,7 @@ def snk():
     
 def move(e):
     global x,y,sens,game,snake,gg,sec,taille
-    if e.keycode==32:
+    if e.char==" ":
         if game=="off":
             game="on"
             snake=[[1,1],[2,1],[3,1]]
@@ -129,20 +132,19 @@ def move(e):
             pomme()
             sens=2
             tick()
-    if e.keycode==37 and snake[taille-1][1]!=snake[taille-2][1]+1:
+    if e.char=="a" and snake[taille-1][1]!=snake[taille-2][1]+1:
         sens=1
         "left"
-    elif e.keycode==38  and snake[taille-1][0]!=snake[taille-2][0]+1:
+    elif e.char=="w"  and snake[taille-1][0]!=snake[taille-2][0]+1:
         sens=3
         "up"
-    elif e.keycode==40  and snake[taille-1][0]!=snake[taille-2][0]-1:
+    elif e.char=="s"  and snake[taille-1][0]!=snake[taille-2][0]-1:
         sens=4
         "down"
-    elif e.keycode==39  and snake[taille-1][1]!=snake[taille-2][1]-1:
+    elif e.char=="d"  and snake[taille-1][1]!=snake[taille-2][1]-1:
         sens=2
         "right"
-    elif e.char=="z":
-        master()
+
 
 def tick():
     global sec,game
@@ -150,20 +152,42 @@ def tick():
     snk()
     if game=="on":
         can.after(200, tick)
-
-
+        
+def callback():
+	global game,lan
+	if lan=="on":
+		game="off"
+    		if askyesno('Quitte', 'Êtes-vous sûr de vouloir faire ça?'):
+        		fen1.quit()
+    		else:
+        		showinfo('Continue', "Vous n'avez pas froid aux yeux!")	
+		game="on"
+		tick()
+	else:
+		fen1.quit()
+	
+	
+def cree():
+	global game,lan
+	lan="on"
+	can.pack(side=LEFT)
+	can.bind("<KeyPress>", move)
+	can.focus_set()
+	bouton.destroy()
+	game="on"
+	master()
+	pomme()
+	tick()
+	
 ##################################
 ##          programme           ##
 ##################################
 fen1 = Tk()
 can = Canvas(fen1,bg="black",height=500,width=500)
-can.pack(side=LEFT)
-bou1 = Button(fen1,text='Quitter',command=fen1.quit)
-bou1.pack(side=BOTTOM)
+bouton=Button(fen1, text="New Game", command=cree)
+bouton.pack()
+bou1 = Button(fen1,text='Quitter',command=callback).pack()
 tab=Label(fen1)
 tab.pack()
-can.bind("<KeyPress>", move)
-can.focus_set()
-master()
 fen1.mainloop()
 fen1.destroy()
