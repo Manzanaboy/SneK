@@ -21,9 +21,12 @@ from random import randrange
 ##g10 =[[1],[1],[1],[1],[1],[1],[1],[1],[1],[1]]
 ##gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10]
 sens=2
+sens2=1
 taille=3
+taille2=3
 sec = 0
 snake=[[1,1],[2,1],[3,1]]
+snake2=[[18,18],[17,18],[16,18]]
 game="off"
 
 ##grille 10: [[],[],[],[],[],[],[],[],[],[]]
@@ -114,8 +117,41 @@ def snk():
     else:
         snake.pop(0)
     
+#####
+def snk2():
+    global gg,taille2,sens2,snake2,game
+    if gg[snake2[taille2-1][0]][snake2[taille2-1][1]][0]==1:
+        print("lost",taille2*10-30)
+        tab.config(text="press <space> to continue")
+        game="off"
+        return
+    if sens2==1:
+        snake2.append([snake2[taille2-1][0],snake2[taille2-1][1]-1])
+    elif sens2==2:
+       snake2.append([snake2[taille2-1][0],snake2[taille2-1][1]+1])
+    elif sens2==3:
+        snake2.append([snake2[taille2-1][0]-1,snake2[taille2-1][1]])
+    elif sens2==4:
+        snake2.append([snake2[taille2-1][0]+1,snake2[taille2-1][1]])
+    can.create_rectangle(snake2[taille2][1]*25, snake2[taille2][0]*25, snake2[taille2][1]*25+25, snake2[taille2][0]*25+25, fill="blue")
+    can.create_rectangle(snake2[0][1]*25, snake2[0][0]*25, snake2[0][1]*25+25, snake2[0][0]*25+25, fill="black")
+    if taille2>4:
+        for i in range(0,taille2):
+            if snake2[taille2][0]==snake2[i][0] and snake2[taille2][1]==snake2[i][1]:
+                print("lost",taille2*10-30)
+                tab.config(text="press <space> to continue")
+                game="off"
+                return
+    if gg[snake2[taille2][0]][snake2[taille2][1]][0]==2:
+        gg[snake2[taille2][0]][snake2[taille2][1]][0]=0
+        pomme()
+        taille2+=1
+        tab.config(text="score :"+str(taille2*10-30))
+    else:
+        snake2.pop(0)
+####
 def move(e):
-    global x,y,sens,game,snake,gg,sec,taille
+    global x,y,sens,game,snake,gg,sec,taille,sens2,snake2,taille2
     if e.keycode==32:
         if game=="off":
             game="on"
@@ -123,11 +159,14 @@ def move(e):
             for i in range(1,len(gg)-1):
                 for b in range(1,len(gg[i])-1):
                     gg[i][b][0]=0
+            snake2=[[18,18],[17,18],[16,18]]
             sec=0
             taille=3
+            taille2=3
             master()
             pomme()
             sens=2
+            sens2=1
             tick()
     if e.keycode==37 and snake[taille-1][1]!=snake[taille-2][1]+1:
         sens=1
@@ -141,16 +180,22 @@ def move(e):
     elif e.keycode==39  and snake[taille-1][1]!=snake[taille-2][1]-1:
         sens=2
         "right"
-    elif e.char=="z":
-        master()
+    elif e.char=="a" and snake2[taille2-1][1]!=snake2[taille2-2][1]+1:
+        sens2=1
+    elif e.char=="w" and snake2[taille2-1][0]!=snake2[taille2-2][0]+1:
+        sens2=3
+    elif e.char=="s" and snake2[taille2-1][0]!=snake2[taille2-2][0]-1:
+        sens2=4
+    elif e.char=="d" and snake2[taille2-1][1]!=snake2[taille2-2][1]-1:
+        sens2=2
 
 def tick():
     global sec,game
     sec += 1
     snk()
+    snk2()
     if game=="on":
         can.after(200, tick)
-
 
 ##################################
 ##          programme           ##
