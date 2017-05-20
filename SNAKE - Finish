@@ -82,6 +82,9 @@ def pomme():
         for i in range(0,taille):
             if a==snake[i][0] and b==snake[i][1]:
                 dess=1
+	    if pl==2:
+            	if a==snake2[i][0] and b==snake2[i][1]:
+                    dess=1
         if dess==0:
             gg[a][b][0]=2
             can.create_rectangle(b*25, a*25, b*25+25, a*25+25, fill="red")
