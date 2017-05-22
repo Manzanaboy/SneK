@@ -22,7 +22,7 @@ from random import randrange
 ##g10 =[[1],[1],[1],[1],[1],[1],[1],[1],[1],[1]]
 ##gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10]
 sens=2
-sens2=0
+sens2=1
 taille=3
 taille2=3
 sec = 0
@@ -61,7 +61,7 @@ gg=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12,g13,g14,g15,g16,g17,g18,g19,g20]
 
 ##################################
 ##          fonctions           ##
-##################################
+##################################http://effbot.org/tkinterbook/tkinter-events-and-bindings.htm
 def master():
     global gg
     for r in range(0,len(gg)):
@@ -74,18 +74,14 @@ def master():
             can.create_rectangle(un*25, y0, un*25+25, y0+25, fill=col)
 
 def pomme():
-    global gg,taille,snake,pl,taille2,snake2
+    global gg,taille,snake
     dess=0
-    a=randrange(1,len(gg)-1)
-    b=randrange(1,len(gg)-1)
+    a=randrange(1,len(gg)) 
+    b=randrange(1,len(gg))
     if gg[a][b][0]==0:
         for i in range(0,taille):
             if a==snake[i][0] and b==snake[i][1]:
                 dess=1
-            if pl==2:
-                for b in range(0,taille2):
-                    if a==snake2[b][0] and b==snake2[b][1]:
-                        dess=1
         if dess==0:
             gg[a][b][0]=2
             can.create_rectangle(b*25, a*25, b*25+25, a*25+25, fill="red")
@@ -95,7 +91,7 @@ def pomme():
         pomme()
         
 def snk():
-    global gg,taille,sens,snake,game,taille2,snake2
+    global gg,taille,sens,snake,game,pl
     if gg[snake[taille-1][0]][snake[taille-1][1]][0]==1:
         tab.config(text="press <space> to continue")
         game="off"
@@ -108,18 +104,8 @@ def snk():
         snake.append([snake[taille-1][0]-1,snake[taille-1][1]])
     elif sens==4:
         snake.append([snake[taille-1][0]+1,snake[taille-1][1]])
-    if pl==2:
-        meme=0
-        for a in range(0,taille2):
-            if snake[0][1]==snake2[a][1] and snake[0][0]==snake2[a][0]:
-                meme=1
-        if meme!=1:
-            can.create_rectangle(snake[0][1]*25, snake[0][0]*25, snake[0][1]*25+25, snake[0][0]*25+25, fill="black")
-        else:
-            can.create_rectangle(snake[0][1]*25, snake[0][0]*25, snake[0][1]*25+25, snake[0][0]*25+25, fill="blue")
-    elif pl==1:
-        can.create_rectangle(snake[0][1]*25, snake[0][0]*25, snake[0][1]*25+25, snake[0][0]*25+25, fill="black")
     can.create_rectangle(snake[taille][1]*25, snake[taille][0]*25, snake[taille][1]*25+25, snake[taille][0]*25+25, fill="green")
+    can.create_rectangle(snake[0][1]*25, snake[0][0]*25, snake[0][1]*25+25, snake[0][0]*25+25, fill="black")
     if taille>4:
         for i in range(0,taille):
             if snake[taille][0]==snake[i][0] and snake[taille][1]==snake[i][1]:
@@ -130,18 +116,18 @@ def snk():
         gg[snake[taille][0]][snake[taille][1]][0]=0
         pomme()
         taille+=1
-        if pl==2:
-            tab.config(text="score vert:"+str(taille*10-30))
-        else:
+        if pl==1:
             tab.config(text="score :"+str(taille*10-30))
+        else:
+            tab.config(text="score vert:"+str(taille*10-30))
     else:
         snake.pop(0)
     
 #####
 def snk2():
-    global gg,taille2,sens2,snake2,game,snake,taille
+    global gg,taille2,sens2,snake2,game
     if gg[snake2[taille2-1][0]][snake2[taille2-1][1]][0]==1:
-        tab.config(text="press <space> to continue")
+        tab2.config(text="")
         game="off"
         return
     if sens2==1:
@@ -152,17 +138,12 @@ def snk2():
         snake2.append([snake2[taille2-1][0]-1,snake2[taille2-1][1]])
     elif sens2==4:
         snake2.append([snake2[taille2-1][0]+1,snake2[taille2-1][1]])
-    meme=0
-    for a in range(0,taille):
-        if snake[0][1]==snake2[a][1] and snake[0][0]==snake2[a][0]:
-            meme=1
-    if meme!=1:
-        can.create_rectangle(snake2[0][1]*25, snake2[0][0]*25, snake2[0][1]*25+25, snake2[0][0]*25+25, fill="black")
     can.create_rectangle(snake2[taille2][1]*25, snake2[taille2][0]*25, snake2[taille2][1]*25+25, snake2[taille2][0]*25+25, fill="blue")
+    can.create_rectangle(snake2[0][1]*25, snake2[0][0]*25, snake2[0][1]*25+25, snake2[0][0]*25+25, fill="black")
     if taille2>4:
         for i in range(0,taille2):
             if snake2[taille2][0]==snake2[i][0] and snake2[taille2][1]==snake2[i][1]:
-                tab.config(text="press <space> to continue")
+                tab2.config(text="")
                 game="off"
                 return
     if gg[snake2[taille2][0]][snake2[taille2][1]][0]==2:
@@ -172,7 +153,7 @@ def snk2():
         tab2.config(text="score bleu:"+str(taille2*10-30))
     else:
         snake2.pop(0)
-
+####
 def move(e):
     global x,y,sens,game,snake,gg,sec,taille,sens2,snake2,taille2
     if e.keycode==32:
@@ -225,9 +206,6 @@ def tick():
         print("score :",taille*10-30)
     if game=="on":
         can.after(200, tick)
-    
-
-
 
 
 
@@ -245,8 +223,7 @@ def callback():
         fen1.quit()
 
 
-
-    
+  
 def cree():
 	global game,lan
 	lan="on"
@@ -259,7 +236,7 @@ def cree():
 	master()
 	pomme()
 	tick()
-
+        
 
 def de():
     global pl,lan
@@ -274,11 +251,13 @@ def de():
     master()
     pomme()
     tick()
-    
+  
 ##################################
 ##          programme           ##
 ##################################
-fen1 = Tk()
+
+
+fen1=Tk()
 can = Canvas(fen1,bg="black",height=500,width=500)
 bouton=Button(fen1, text="New Game", command=cree)
 bouton.pack()
@@ -286,8 +265,8 @@ bou3 = Button(fen1,text="2 Players", command=de)
 bou3.pack()
 bou1 = Button(fen1,text='Quitter',command=callback).pack()
 tab=Label(fen1)
-tab2=Label(fen1)
 tab.pack()
+tab2=Label(fen1)
 tab2.pack()
 fen1.mainloop()
 fen1.destroy()
